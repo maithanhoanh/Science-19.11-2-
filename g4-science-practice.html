@@ -1,0 +1,821 @@
+<title>Grade 4 Science Practice</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Lexend:wght@400;500;600&display=swap">
+<style>
+/* Layout: one column "lab notebook" — home grid of unit cards, then focused one-question-at-a-time cards. Each unit carries its own colour. */
+:root{
+  --bg:#EEF3F6; --surface:#FFFFFF; --sunk:#F5F8FA; --ink:#14232E; --muted:#56687A; --line:#D5DEE5;
+  --primary:#24489B; --primary-ink:#FFFFFF;
+  --leaf:#2E8A4C; --sound:#6A4CCF; --matter:#1C78B0; --gut:#C9512F;
+  --ok:#1E8A50; --ok-bg:#E3F5EA; --bad:#C23B3B; --bad-bg:#FBE7E7; --warn:#B7791F;
+  --fig-sky:#DDEEFA; --fig-sea:#5FA8D8; --fig-land:#9DBB7A; --fig-sun:#F2B632; --fig-cloud:#FFFFFF; --fig-body:#F3E2D3;
+  --petal:#E86FA0; --stem:#3E9A57; --organ-a:#E7836B; --organ-b:#E9B24C; --organ-c:#C9667B;
+  --display:"Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --body:"Lexend", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E151B; --surface:#17212A; --sunk:#1D2933; --ink:#E5EDF3; --muted:#9AAABA; --line:#2C3A46;
+  --primary:#7EA2F2; --primary-ink:#0E151B;
+  --leaf:#5BC27C; --sound:#A28BF0; --matter:#5BB3E6; --gut:#F08A66;
+  --ok:#5BD08D; --ok-bg:#163526; --bad:#F27D7D; --bad-bg:#3A1C1F; --warn:#E6B65C;
+  --fig-sky:#1E3346; --fig-sea:#2F6E99; --fig-land:#4F6B3B; --fig-sun:#E0A52A; --fig-cloud:#C9D6E2; --fig-body:#3A2E26;
+  --petal:#D9608F; --stem:#4FAE69; --organ-a:#D9715A; --organ-b:#D9A23F; --organ-c:#B9586D;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0E151B; --surface:#17212A; --sunk:#1D2933; --ink:#E5EDF3; --muted:#9AAABA; --line:#2C3A46;
+  --primary:#7EA2F2; --primary-ink:#0E151B;
+  --leaf:#5BC27C; --sound:#A28BF0; --matter:#5BB3E6; --gut:#F08A66;
+  --ok:#5BD08D; --ok-bg:#163526; --bad:#F27D7D; --bad-bg:#3A1C1F; --warn:#E6B65C;
+  --fig-sky:#1E3346; --fig-sea:#2F6E99; --fig-land:#4F6B3B; --fig-sun:#E0A52A; --fig-cloud:#C9D6E2; --fig-body:#3A2E26;
+  --petal:#D9608F; --stem:#4FAE69; --organ-a:#D9715A; --organ-b:#D9A23F; --organ-c:#B9586D;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:20px 48px}
+.wrap{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--primary);outline-offset:2px;border-radius:8px}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+
+/* header */
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 20px;padding-top:4px}
+.top h1{font-size:clamp(28px,5vw,40px);font-weight:800;letter-spacing:-.01em}
+.top h1 span{color:var(--primary)}
+.namebox{display:flex;flex-direction:column;gap:4px;min-width:0}
+.namebox label{font-size:13px;color:var(--muted)}
+.namebox input{border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 12px;width:220px;max-width:100%}
+
+/* home */
+.units{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:620px){.units{grid-template-columns:1fr}}
+.ucard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden}
+.ucard .tag{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--u)}
+.ucard .tag i{width:10px;height:10px;border-radius:50%;background:var(--u)}
+.ucard h2{font-size:21px}
+.ucard p{margin:0;color:var(--muted);font-size:14px}
+.ucard .meta{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.ucard .meta b{color:var(--ink);font-variant-numeric:tabular-nums}
+.ucard .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:4px}
+.ucard svg.mark{position:absolute;right:-8px;top:-8px;width:84px;height:84px;opacity:.14;color:var(--u)}
+.mixed{background:var(--primary);color:var(--primary-ink);border-radius:var(--r);padding:20px;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between}
+.mixed h2{font-size:22px}
+.mixed p{margin:4px 0 0;opacity:.85;font-size:14px}
+.mixed .btn{background:var(--primary-ink);color:var(--primary);border-color:transparent}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:9px 18px;font-weight:600;font-size:15px;min-height:42px}
+.btn:hover{border-color:var(--ink)}
+.btn.primary{background:var(--u,var(--primary));border-color:var(--u,var(--primary));color:#fff}
+:root[data-theme="dark"] .btn.primary{color:var(--bg)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .btn.primary{color:var(--bg)}}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn:disabled{opacity:.45;cursor:not-allowed;filter:none}
+.btn.ghost{background:transparent}
+
+.howto{background:var(--surface);border:1px dashed var(--line);border-radius:var(--r);padding:14px 18px;font-size:14px;color:var(--muted)}
+.howto b{color:var(--ink)}
+
+/* screen header */
+.bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.bar .back{border:none;background:transparent;color:var(--muted);font-weight:600;padding:6px 0}
+.bar .back:hover{color:var(--ink)}
+.bar .title{display:flex;flex-direction:column;min-width:0;flex:1}
+.bar .title b{font-family:var(--display);font-size:20px;line-height:1.2}
+.bar .title small{color:var(--u);font-weight:600;font-size:13px}
+.score{font-variant-numeric:tabular-nums;font-weight:600;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:14px}
+.prog{height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--u);border-radius:99px;transition:width .3s}
+
+/* question card */
+.qcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:clamp(18px,4vw,28px);display:flex;flex-direction:column;gap:16px}
+.qhead{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.qhead .kind{font-weight:600;color:var(--u);text-transform:uppercase;letter-spacing:.07em;font-size:12px}
+.qtext{font-family:var(--body);font-weight:600;font-size:clamp(18px,2.6vw,21px);line-height:1.4}
+.fig{background:var(--sunk);border-radius:12px;padding:12px;overflow-x:auto;display:flex;justify-content:center}
+.fig svg{max-width:100%;height:auto;display:block}
+.fig table{border-collapse:collapse;font-size:15px;background:var(--surface);font-variant-numeric:tabular-nums}
+.fig th,.fig td{border:1px solid var(--line);padding:7px 14px;text-align:center}
+.fig th{background:var(--sunk);font-weight:600}
+.fig td.l,.fig th.l{text-align:left}
+.bank{display:flex;flex-wrap:wrap;gap:6px;font-size:14px}
+.bank span{border:1px dashed var(--u);color:var(--u);border-radius:8px;padding:2px 10px}
+
+.opts{display:grid;gap:10px}
+.opts.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.opt{display:flex;align-items:center;gap:12px;text-align:left;background:var(--sunk);border:2px solid transparent;border-radius:12px;padding:12px 14px;min-height:52px}
+.opt:hover:not(:disabled){border-color:var(--line)}
+.opt .key{flex:none;width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:var(--surface);font-weight:600;font-size:14px;border:1px solid var(--line)}
+.opt.sel{border-color:var(--u);background:var(--surface)}
+.opt.right{border-color:var(--ok);background:var(--ok-bg)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.opt:disabled{cursor:default}
+
+.fillrow input{width:100%;max-width:420px;border:2px solid var(--line);background:var(--sunk);border-radius:12px;padding:12px 14px;font-size:17px}
+.fillrow input:focus{border-color:var(--u);outline:none}
+input.right{border-color:var(--ok)!important;background:var(--ok-bg)!important}
+input.wrong{border-color:var(--bad)!important;background:var(--bad-bg)!important}
+.hint{margin:0;color:var(--muted);font-size:14px}
+
+.seq{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.slot{display:flex;align-items:center;gap:12px;min-height:48px;border:2px dashed var(--line);border-radius:12px;padding:8px 12px;cursor:pointer}
+.slot.filled{border-style:solid;border-color:var(--u);background:var(--surface)}
+.slot .n{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--sunk);font-weight:600;font-size:14px;font-variant-numeric:tabular-nums}
+.slot.right{border-color:var(--ok);background:var(--ok-bg)}
+.slot.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1.5px solid var(--u);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 14px;font-weight:500}
+.chip:hover{background:var(--sunk)}
+
+.match{display:grid;gap:10px}
+.mrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;align-items:center;background:var(--sunk);border-radius:12px;padding:10px 12px;border:2px solid transparent}
+@media (max-width:560px){.mrow{grid-template-columns:1fr}}
+.mrow .ml{font-weight:500}
+.mrow select{width:100%;border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:9px 10px;min-height:42px}
+.mrow.right{border-color:var(--ok);background:var(--ok-bg)}
+.mrow.wrong{border-color:var(--bad);background:var(--bad-bg)}
+
+.sort{display:grid;gap:8px}
+.srow{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 12px;background:var(--sunk);border-radius:12px;padding:8px 12px;border:2px solid transparent}
+.srow .st{font-weight:500;min-width:0;flex:1 1 180px}
+.seg{display:inline-flex;border:1.5px solid var(--line);border-radius:999px;overflow:hidden;background:var(--surface);flex-wrap:wrap}
+.seg button{border:none;background:transparent;padding:7px 14px;font-size:14px;font-weight:500}
+.seg button+button{border-left:1.5px solid var(--line)}
+.seg button.on{background:var(--u);color:var(--surface)}
+.srow.right{border-color:var(--ok);background:var(--ok-bg)}
+.srow.wrong{border-color:var(--bad);background:var(--bad-bg)}
+
+.fb{border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px;font-size:15px}
+.fb.good{background:var(--ok-bg);border:1.5px solid var(--ok)}
+.fb.part{background:var(--sunk);border:1.5px solid var(--warn)}
+.fb.miss{background:var(--bad-bg);border:1.5px solid var(--bad)}
+.fb strong{font-family:var(--display);font-size:18px}
+.fb.good strong{color:var(--ok)} .fb.miss strong{color:var(--bad)} .fb.part strong{color:var(--warn)}
+.fb .ans b{font-weight:600}
+.actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+
+/* learn */
+.ideas{display:grid;gap:14px}
+.idea{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px}
+.idea h3{font-size:18px;margin-bottom:8px;color:var(--u)}
+.idea ul{margin:0;padding-left:20px;display:grid;gap:4px}
+.idea li::marker{color:var(--u)}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px}
+.flow span{background:var(--sunk);border-radius:8px;padding:4px 10px;font-size:14px;font-weight:500}
+.flow em{font-style:normal;color:var(--u);font-weight:700}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.fcard{background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:14px;text-align:left;min-height:96px;display:flex;flex-direction:column;gap:6px}
+.fcard .term{font-family:var(--display);font-size:17px;font-weight:600}
+.fcard .def{font-size:14px;color:var(--muted)}
+.fcard[aria-expanded="false"] .def{display:none}
+.fcard[aria-expanded="false"]::after{content:"Tap to see meaning";font-size:12px;color:var(--u);margin-top:auto}
+.fcard[aria-expanded="true"]{border-color:var(--u)}
+.sechead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.sechead h2{font-size:22px}
+
+/* results */
+.res{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:clamp(20px,5vw,32px);display:flex;flex-direction:column;gap:14px;align-items:flex-start}
+.res .big{font-family:var(--display);font-weight:800;font-size:clamp(48px,10vw,72px);line-height:1;color:var(--u);font-variant-numeric:tabular-nums}
+.res .big small{font-size:.4em;color:var(--muted);font-weight:600}
+.stars{display:flex;gap:6px}
+.stars svg{width:34px;height:34px}
+.stars .on{fill:var(--fig-sun)} .stars .off{fill:var(--line)}
+.review{display:grid;gap:10px}
+.rv{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--bad);border-radius:12px;padding:12px 16px;font-size:15px}
+.rv.part{border-left-color:var(--warn)}
+.rv p{margin:4px 0 0;color:var(--muted)}
+.rv b{color:var(--ink)}
+
+/* svg figure classes */
+.s-line{stroke:var(--ink);fill:none;stroke-width:1.5}
+.s-lab{fill:var(--surface);stroke:var(--ink);stroke-width:1.5}
+.s-num{fill:var(--ink);font:600 13px var(--body);text-anchor:middle;dominant-baseline:central}
+.s-txt{fill:var(--ink);font:500 12px var(--body)}
+.s-muted{fill:var(--muted);font:500 11px var(--body)}
+.s-petal{fill:var(--petal)} .s-stem{fill:var(--stem)} .s-stemline{stroke:var(--stem);stroke-width:8;fill:none;stroke-linecap:round}
+.s-ovary{fill:var(--organ-b);stroke:var(--ink);stroke-width:1} .s-ovule{fill:var(--surface)}
+.s-anther{fill:var(--organ-b);stroke:var(--ink);stroke-width:1}
+.s-fil{stroke:var(--muted);stroke-width:3;fill:none}
+.s-body{fill:var(--fig-body)}
+.s-tube{stroke:var(--organ-a);fill:none;stroke-linecap:round;stroke-linejoin:round}
+.s-stom{fill:var(--organ-c)}
+.s-li{stroke:var(--organ-b);fill:none;stroke-linecap:round;stroke-linejoin:round}
+.s-wave{stroke:var(--u);stroke-width:3;fill:none}
+.s-axis{stroke:var(--line);stroke-width:1.5}
+.s-sky{fill:var(--fig-sky)} .s-sea{fill:var(--fig-sea)} .s-land{fill:var(--fig-land)} .s-sun{fill:var(--fig-sun)} .s-cloud{fill:var(--fig-cloud);stroke:var(--muted);stroke-width:1}
+.s-arrow{stroke:var(--ink);stroke-width:2;fill:none}
+.s-rain{stroke:var(--fig-sea);stroke-width:2.5;stroke-linecap:round}
+.s-bar{fill:var(--u)}
+.s-grid{stroke:var(--line);stroke-width:1}
+.s-head{fill:var(--ink)}
+
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+.pop{animation:pop .25s ease-out}
+@keyframes pop{from{transform:translateY(6px);opacity:.6}to{transform:none;opacity:1}}
+footer{font-size:12px;color:var(--muted);text-align:center}
+</style>
+
+<div class="wrap" id="app"></div>
+
+<script>
+/* ------------------------------------------------------------------ */
+/*  CONTENT — Cambridge Primary Science, Grade 4, Nguyen Sieu School   */
+/* ------------------------------------------------------------------ */
+const UNITS = [
+{
+  id:"u1", code:"Unit 1", color:"--leaf",
+  title:"Flowering and non-flowering plants",
+  blurb:"Flower parts, pollination, life cycle, seed dispersal and germination.",
+  icon:'<svg class="mark" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="7" r="4"/><circle cx="7" cy="11" r="4"/><circle cx="17" cy="11" r="4"/><circle cx="12" cy="15" r="4"/></svg>',
+  ideas:[
+    {h:"Parts of a flower", li:[
+      "<b>Petals</b>: often brightly coloured to attract insects.",
+      "<b>Sepals</b>: green, leaf-like parts that protect the flower bud.",
+      "<b>Stamen</b> (male part) = <b>anther</b> + <b>filament</b>. The anther makes pollen; the filament is the stalk that holds up the anther.",
+      "<b>Carpel</b> (female part) = <b>stigma</b> + <b>style</b> + <b>ovary</b>. The stigma is sticky to catch pollen. The ovary contains <b>ovules</b>.",
+      "After fertilisation: the <b>ovules become seeds</b> and the <b>ovary becomes the fruit</b>."]},
+    {h:"Pollination", li:[
+      "<b>Pollination</b> is when pollen moves from an anther to a stigma.",
+      "<b>Insect-pollinated</b> flowers: big, bright petals, sweet scent, nectar, sticky pollen; anthers and stigma inside the flower.",
+      "<b>Wind-pollinated</b> flowers: small, dull petals (or none), no scent or nectar, anthers and feathery stigmas hang outside, lots of light pollen.",
+      "<b>Fertilisation</b> is when the male cell from pollen joins with the female cell in the ovule."]},
+    {h:"Flowering and non-flowering plants", li:[
+      "Flowering plants (rose, mango, sunflower) reproduce with flowers and make seeds inside fruits.",
+      "Non-flowering plants reproduce by <b>spores</b> (ferns, mosses) or <b>cones</b> (conifers such as pine trees)."]},
+    {h:"Life cycle of a flowering plant", flow:["Germination","Growth","Pollination","Fertilisation","Seed formation","Seed dispersal"]},
+    {h:"Seed dispersal", li:[
+      "<b>Wind</b>: light seeds with wings or parachutes (sycamore, dandelion).",
+      "<b>Water</b>: fruits with a spongy or fibrous covering that floats (coconut).",
+      "<b>Animals</b>: hooks and spines stick to fur or clothes (burdock); soft, tasty fruits are eaten (cherry, mango).",
+      "<b>Explosion</b>: pods dry, split open and throw the seeds out (pea, bean).",
+      "<b>Drop and roll</b>: heavy fruits fall and roll away (horse chestnut)."]},
+    {h:"Germination", li:[
+      "Seeds need <b>water</b>, <b>warmth</b> (the right temperature) and <b>air</b> to germinate. They do not need light.",
+      "Order: the seed absorbs water and swells → the root grows downwards → the shoot grows upwards → the first leaves appear and start to make food → the food store shrivels."]},
+    {h:"Fair tests", li:[
+      "<b>Independent variable</b>: the one thing you change.",
+      "<b>Dependent variable</b>: the thing you measure or observe.",
+      "<b>Control variables</b>: things you keep the same to make the test fair.",
+      "We measure temperature with a <b>thermometer</b>."]}
+  ],
+  words:[
+    ["Pollination","Pollen moves from an anther to a stigma."],
+    ["Fertilisation","The male cell in pollen joins the female cell in the ovule."],
+    ["Germination","When a seed starts to grow into a new plant."],
+    ["Seed dispersal","Seeds are carried away from the parent plant."],
+    ["Spore","A tiny cell that ferns and mosses use to reproduce."],
+    ["Anther","Part of the stamen that makes pollen."],
+    ["Stigma","Sticky top of the carpel that catches pollen."],
+    ["Ovule","Inside the ovary; becomes a seed after fertilisation."],
+    ["Ovary","Holds the ovules; becomes the fruit."],
+    ["Sepal","Protects the flower bud."]
+  ],
+  qs:[
+    {t:"match", fig:"flower", q:"Label the parts of the flower. Choose the name for each number.",
+      pairs:[["1","Petal"],["2","Sepal"],["3","Anther"],["4","Filament"],["5","Stigma"],["6","Style"],["7","Ovary"]],
+      ex:"Stamen = anther + filament. Carpel = stigma + style + ovary."},
+    {t:"mcq", q:"Which part of the flower forms the <b>seed</b> after fertilisation?", o:["Ovule","Anther","Petal","Sepal"], a:0, ex:"The ovules (inside the ovary) become seeds."},
+    {t:"mcq", q:"Which part of the flower forms the <b>fruit</b> after fertilisation?", o:["Ovary","Stigma","Filament","Petal"], a:0, ex:"The ovary grows into the fruit that holds the seeds."},
+    {t:"match", q:"Match each description with the flower part.",
+      pairs:[["The female part of a flower","Carpel"],["The male part of a flower","Stamen"],["Protects the flower bud","Sepal"],["Produces pollen grains","Anther"],["The stalk that holds the anther","Filament"],["The sticky part that catches pollen","Stigma"]],
+      ex:"Carpel = female. Stamen = male."},
+    {t:"sort", q:"Is each feature found in an insect-pollinated flower or a wind-pollinated flower?", bins:["Insect","Wind"],
+      items:[["Big, brightly coloured petals",0],["Sweet scent",0],["Makes nectar",0],["Anthers hang outside the flower",1],["Feathery stigma",1],["Small, dull petals or no petals",1],["Lots of very light pollen",1],["Sticky pollen",0]],
+      ex:"Insect flowers attract insects with colour, scent and nectar. Wind flowers hang their anthers and stigmas out in the wind."},
+    {t:"sort", q:"Flowering plant or non-flowering plant?", bins:["Flowering","Non-flowering"],
+      items:[["Reproduces by spores",1],["Reproduces using flowers",0],["Has fruits",0],["Has cones",1],["Fern",1],["Mango tree",0],["Pine tree",1],["Sunflower",0]],
+      ex:"Ferns and mosses use spores. Conifers like pine trees use cones. Flowering plants make seeds inside fruits."},
+    {t:"order", q:"Put the processes in the life cycle of a flowering plant in order. Start with germination.",
+      items:["Germination","Pollination","Fertilisation","Seed formation","Seed dispersal"],
+      ex:"The seed germinates, the plant grows and flowers, it is pollinated, fertilisation happens, seeds form, then they are dispersed."},
+    {t:"mcq", q:"What is <b>pollination</b>?", o:["Pollen moves from an anther to a stigma","A seed starts to grow","Seeds are carried away from the plant","The ovary turns into a fruit"], a:0, ex:"Pollination comes before fertilisation."},
+    {t:"match", q:"How is each seed or fruit dispersed?",
+      pairs:[["Dandelion (seed with a parachute)","By wind"],["Coconut (spongy covering)","By water"],["Pea pod","Split open / explosion"],["Burdock (hooks)","Sticks to animal fur"],["Horse chestnut (heavy)","Drop and roll"],["Cherry (soft, tasty)","Eaten by animals"]],
+      ex:"The shape of a seed or fruit tells you how it is dispersed."},
+    {t:"mcq", bank:["spongy","hooks","fur","wings","spines","dispersed","animals"], q:"Some seeds have thin ______ to help them blow away easily.", o:["wings","hooks","spines","fur"], a:0, ex:"Wings and parachutes help seeds travel in the wind."},
+    {t:"mcq", bank:["spongy","hooks","fur","wings","spines","dispersed","animals"], q:"Some fruits have a ______ covering that helps them float, so water carries the seeds away.", o:["spongy","sticky","hooked","wing-shaped"], a:0, ex:"A coconut has a spongy, fibrous covering filled with air."},
+    {t:"mcq", bank:["spongy","hooks","fur","wings","spines","dispersed","animals"], q:"Some fruits and seeds have hooks and spines. These stick onto the ______ of animals.", o:["fur","wings","teeth","eyes"], a:0, ex:"Hooks catch on fur or clothes and drop off somewhere else."},
+    {t:"fill", q:"Soft and tasty fruits attract ______ to eat them. (one word)", acc:["animals","animal","birds","animals and birds"], hint:"a _ _ _ _ _ _", ex:"Animals eat the fruit, and the seeds pass out in their droppings far away."},
+    {t:"mcq", q:"Which of these do seeds <b>NOT</b> need to germinate?", o:["Light","Water","Warmth","Air"], a:0, ex:"Seeds need water, warmth and air. Light is needed later, when the leaves make food."},
+    {t:"fig-intro", hidden:true},
+    {t:"mcq", fig:"germ", q:"Pierre puts the same number of bean seeds on wet cotton wool in three places. Which is the <b>independent variable</b> (the one he changes)?", o:["Temperature","Number of seeds that germinate","Amount of water","Type of seed"], a:0, ex:"He changes the temperature: fridge 4 °C, classroom 22 °C, warm cupboard 30 °C."},
+    {t:"mcq", fig:"germ", q:"In Pierre's investigation, what is the <b>dependent variable</b> (what he measures)?", o:["Number of seeds that germinate after 5 days","Temperature","Amount of cotton wool","Size of the dish"], a:0, ex:"He counts how many seeds germinate."},
+    {t:"mcq", fig:"germ", q:"Which is a <b>control variable</b> in Pierre's investigation?", o:["The amount of water","The temperature","The number of seeds that germinate","The day he counts"], a:0, ex:"Amount of water, type of seed and number of seeds are kept the same."},
+    {t:"fill", q:"Name the equipment Pierre uses to measure temperature.", acc:["thermometer","a thermometer","thermometers"], hint:"t _ _ _ _ _ _ _ _ _ _", ex:"A thermometer measures temperature in °C."},
+    {t:"mcq", fig:"germ", q:"Seeds in dish A (fridge, 4 °C) did not germinate. Why?", o:["They need the right temperature (warmth)","They need light","They need soil","They need wind"], a:0, ex:"It was too cold. Seeds need warmth, water and air."},
+    {t:"order", q:"Put the steps of germination in order.",
+      items:["The seed absorbs water and swells","The root grows downwards","The shoot grows upwards","The first leaves appear and start to make food","The food store shrivels"],
+      ex:"Root first, then shoot, then leaves. The food store is used up and shrivels."}
+  ]
+},
+{
+  id:"u2", code:"Unit 2", color:"--sound",
+  title:"Sound",
+  blurb:"Vibrations, volume, pitch, how sound travels and investigating materials.",
+  icon:'<svg class="mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 10v4M8 7v10M12 4v16M16 8v8M20 11v2"/></svg>',
+  ideas:[
+    {h:"How sound is made and travels", li:[
+      "All sounds are made by <b>vibrations</b> (quick movements back and forth).",
+      "The vibrations pass from particle to particle until they reach our ear.",
+      "Sound travels best through <b>solids</b>, then liquids, and least well through <b>gases</b>. It cannot travel through a vacuum (space)."]},
+    {h:"Volume", li:[
+      "<b>Volume</b> is how loud or quiet a sound is. Bigger vibrations make louder sounds.",
+      "Volume is measured in <b>decibels (dB)</b> with a sound meter or data logger.",
+      "Very loud sounds can damage your ears. <b>Ear defenders</b> make sounds quieter.",
+      "To <b>muffle</b> a sound is to make it quieter and less clear."]},
+    {h:"Pitch", li:[
+      "<b>Pitch</b> is how high or low a sound is.",
+      "<b>Fast</b> vibrations make a <b>high</b> pitch. <b>Slow</b> vibrations make a <b>low</b> pitch.",
+      "Strings: <b>short, thin, tight</b> = higher pitch. Long, thick, loose = lower pitch.",
+      "Wind instruments: a <b>shorter</b> column of air gives a higher pitch."]},
+    {h:"Reading sound waves", li:[
+      "<b>Taller</b> waves = louder sound.",
+      "Waves <b>closer together</b> (more waves) = higher pitch."]},
+    {h:"How a flute makes a sound reach your ear", flow:["Musician blows into the flute","Air column vibrates","Surrounding air vibrates","Vibrating air reaches the ear"]},
+    {h:"Musical instruments", li:[
+      "<b>Wind / brass</b> (blow): flute, recorder, saxophone, trombone, trumpet.",
+      "<b>String</b> (pluck or bow): guitar, banjo, harp, violin.",
+      "<b>Percussion</b> (hit or shake): drum, xylophone, tambourine."]}
+  ],
+  words:[
+    ["Vibrations","Quick movements back and forth."],
+    ["Volume","How loud or quiet a sound is."],
+    ["Pitch","How high or low a sound is."],
+    ["Muffle","Make a sound quieter and less clear."],
+    ["Decibel (dB)","The unit we use to measure volume."],
+    ["Ear defenders","Protect ears by making sounds quieter."],
+    ["Particles","Tiny bits that make up solids, liquids and gases. Sound passes through them."],
+    ["Vacuum","Empty space with no particles. Sound cannot travel through it."]
+  ],
+  qs:[
+    {t:"match", q:"Match each word with its meaning.",
+      pairs:[["Vibrations","Quick movements back and forth"],["Volume","How loud or quiet a sound is"],["Pitch","How high or low a sound is"],["Muffle","To make a sound quieter and less clear"]],
+      ex:"These four words come up in every sound question."},
+    {t:"mcq", q:"What type of sound can damage your ears?", o:["Very loud sounds","Very quiet sounds","High-pitched sounds only","Sounds from string instruments"], a:0, ex:"Very loud sounds, especially over a long time, can damage hearing."},
+    {t:"mcq", q:"What is the unit of sound volume?", o:["Decibels (dB)","Kilometres (km)","Newtons (N)","Seconds (s)"], a:0, ex:"Newtons measure force; decibels measure sound volume."},
+    {t:"mcq", fig:"waves", keep:true, q:"Look at the sound waves. Which sound is <b>louder</b>?", o:["Sound A","Sound B"], a:0, ex:"Sound A has taller waves (bigger vibrations), so it is louder."},
+    {t:"mcq", fig:"waves", keep:true, q:"Look at the sound waves. Which sound has a <b>higher pitch</b>?", o:["Sound A","Sound B"], a:1, ex:"Sound B has more waves close together (faster vibrations), so its pitch is higher."},
+    {t:"order", q:"Karen listens to a flute. Put the steps in order to show how the sound travels to her ear.",
+      items:["The musician blows into the flute","The air column in the flute vibrates","The vibrations cause the surrounding air to vibrate","The vibrating air particles reach her ear"],
+      ex:"Vibrations pass from the flute to the air, then to the ear."},
+    {t:"mcq", keep:true, q:"A musician covers all the holes on a flute. Then he uncovers hole A (near the mouthpiece). Compared with covering all the holes, the sound will be:", o:["Higher-pitched","Lower-pitched"], a:0, ex:"Uncovering a hole makes the vibrating air column shorter, so the pitch is higher."},
+    {t:"sort", q:"Is each one a wind instrument (blow) or a string instrument (pluck)?", bins:["Wind","String"],
+      items:[["Saxophone",0],["Banjo",1],["Trombone",0],["Harp",1],["Flute",0],["Guitar",1]],
+      ex:"Wind instruments make an air column vibrate. String instruments make strings vibrate."},
+    {t:"tf", q:"True or false? We use ear defenders to make sound louder.", a:false, ex:"Ear defenders make sound quieter to protect our ears."},
+    {t:"tf", q:"True or false? Sound travels best through gases.", a:false, ex:"Sound travels best through solids, because the particles are closest together."},
+    {t:"tf", q:"True or false? Fast vibrations make a low-pitched sound.", a:false, ex:"Fast vibrations make a high pitch."},
+    {t:"tf", q:"True or false? Sound cannot travel through space, because there are no particles.", a:true, ex:"Space is a vacuum, so there is nothing to pass the vibrations on."},
+    {t:"fill", fig:"dbtable", q:"Students covered a sound source with different materials and measured the volume. What device could they use to measure the volume?", acc:["data logger","datalogger","sound meter","sound level meter","decibel meter","db meter","sound sensor","sound level sensor","a data logger","a sound meter"], hint:"d _ _ _   l _ _ _ _ _", ex:"A data logger with a sound sensor (or a sound meter) measures volume in dB."},
+    {t:"mcq", fig:"dbtable", q:"What is the <b>independent variable</b> in this investigation?", o:["The type of material","The volume of sound (dB)","The sound source","The distance to the meter"], a:0, ex:"They changed the material each time."},
+    {t:"mcq", fig:"dbtable", q:"What is the <b>dependent variable</b>?", o:["The volume of sound (dB)","The type of material","The size of the room","The number of students"], a:0, ex:"They measured the volume in decibels."},
+    {t:"mcq", fig:"dbtable", q:"Which is a <b>control variable</b>?", o:["The same sound source at the same distance","The type of material","The volume measured","The colour of the material"], a:0, ex:"Keep the sound source, its volume and the distance the same to make the test fair."},
+    {t:"mcq", fig:"dbbars", q:"Which conclusion matches the results?", o:["Bubble wrap muffled the sound best; fabric muffled it least","Fabric muffled the sound best","All materials muffled the sound equally","Wooden panel made the sound louder than no material"], a:0, ex:"The lowest reading (40 dB, bubble wrap) means the least sound got through."},
+    {t:"mcq", keep:true, q:"Which string produces a <b>higher</b> pitch when it is plucked?", o:["Thick","Thin"], a:1, ex:"Thin strings vibrate faster, so they make a higher pitch."},
+    {t:"mcq", keep:true, q:"Which string produces a <b>lower</b> pitch when it is plucked?", o:["Long","Short"], a:0, ex:"Long strings vibrate more slowly, so the pitch is lower."},
+    {t:"mcq", keep:true, q:"Which string produces a <b>higher</b> pitch when it is plucked?", o:["Tight","Loose"], a:0, ex:"Tightening a string makes it vibrate faster: higher pitch."},
+    {t:"mcq", q:"How can you make a drum sound <b>louder</b>?", o:["Hit it harder","Hit it more softly","Cover it with a towel","Stand further away"], a:0, ex:"Hitting harder makes bigger vibrations, which make a louder sound."}
+  ]
+},
+{
+  id:"u3", code:"Unit 3", color:"--matter",
+  title:"States and properties of matter",
+  blurb:"Solids, liquids and gases, changes of state, dissolving and the water cycle.",
+  icon:'<svg class="mark" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c3 4.5 7 8.6 7 13a7 7 0 0 1-14 0c0-4.4 4-8.5 7-13z"/></svg>',
+  ideas:[
+    {h:"Three states of matter", li:[
+      "<b>Solid</b>: definite shape and definite volume; cannot be compressed (stone, ice).",
+      "<b>Liquid</b>: definite volume but takes the shape of its container; cannot be compressed easily (water, oil).",
+      "<b>Gas</b>: no definite shape or volume; spreads out and can be compressed easily (oxygen, steam)."]},
+    {h:"Changes of state", li:[
+      "<b>Melting</b>: solid → liquid. <b>Freezing</b>: liquid → solid.",
+      "<b>Evaporation</b>: liquid → gas slowly at the surface. <b>Boiling</b>: liquid → gas quickly at a high temperature.",
+      "<b>Condensation</b>: gas → liquid when it is cooled (water drops on a cold cup).",
+      "Pure water melts at <b>0 °C</b> and boils at <b>100 °C</b>. We measure temperature with a <b>thermometer</b>.",
+      "Heating gives particles energy: they move faster and spread out. Cooling: they slow down and move closer together."]},
+    {h:"Reversible changes and dissolving", li:[
+      "A <b>reversible change</b> can be changed back (melting, freezing, dissolving).",
+      "To <b>dissolve</b>: a substance mixes into a liquid and seems to disappear. It is <b>soluble</b> (salt, sugar, copper sulfate).",
+      "<b>Insoluble</b> substances do not dissolve: they sink, float or stay mixed in (sand, chalk, sulfur powder).",
+      "Get dissolved salt back by <b>evaporation</b>. Separate insoluble solids by filtering."]},
+    {h:"The water cycle", flow:["Evaporation","Condensation","Precipitation","Collection"]},
+    {h:"Water pollution", li:[
+      "<b>Fertilisers</b> help crops grow; <b>pesticides</b> kill pests. Both can wash into rivers and pollute water.",
+      "Ways to help: don't throw rubbish or oil into rivers, treat sewage, use less fertiliser and pesticide, stop factories dumping chemicals.",
+      "The <b>atmosphere</b> is the layer of air around the Earth."]}
+  ],
+  words:[
+    ["Atmosphere","The layer of air around the Earth."],
+    ["Boiling point","The temperature at which a liquid boils and becomes a gas."],
+    ["Melting point","The temperature at which a solid melts."],
+    ["Dissolve","Mix into a liquid and become part of it."],
+    ["Fertiliser","A chemical farmers put in the soil to help crops grow."],
+    ["Pesticide","A chemical sprayed on crops to kill pests such as insects."],
+    ["Reversible change","A change that can be changed back."],
+    ["Thermometer","Instrument that measures temperature."],
+    ["Water cycle","Water moves from seas into the air, forms clouds and falls back to Earth, again and again."],
+    ["Condensation","A gas cools and turns into a liquid."]
+  ],
+  qs:[
+    {t:"fill", q:"The layer of air around the Earth.", acc:["atmosphere","the atmosphere"], hint:"a _ _ _ _ _ _ _ _ _", ex:"The atmosphere is the air around our planet."},
+    {t:"fill", q:"The temperature at which a liquid boils and becomes a gas.", acc:["boiling point","boiling temperature","boilingpoint"], hint:"b _ _ _ _ _ _   p _ _ _ _", ex:"Pure water has a boiling point of 100 °C."},
+    {t:"fill", q:"When a substance mixes with another substance and becomes part of it.", acc:["dissolve","dissolving","dissolves","dissolved","dissolution"], hint:"d _ _ _ _ _ _ _", ex:"Salt dissolves in water."},
+    {t:"fill", q:"The chemical that farmers put in the soil to make their crops grow.", acc:["fertiliser","fertilizer","fertilisers","fertilizers"], hint:"f _ _ _ _ _ _ _ _ _ _", ex:"Fertilisers help crops grow, but too much can pollute water."},
+    {t:"fill", q:"The chemical that farmers spray on their crops to kill pests such as insects.", acc:["pesticide","pesticides","insecticide"], hint:"p _ _ _ _ _ _ _ _", ex:"Pesticides kill pests."},
+    {t:"fill", q:"A change that can be changed back to the way it was before.", acc:["reversible change","reversible","a reversible change","reversible changes"], hint:"r _ _ _ _ _ _ _ _ _   c _ _ _ _ _", ex:"Melting ice is a reversible change: you can freeze the water again."},
+    {t:"fill", q:"The instrument that we use to measure temperature.", acc:["thermometer","a thermometer"], hint:"t _ _ _ _ _ _ _ _ _ _", ex:"Thermometers measure temperature in °C."},
+    {t:"fill", q:"The continuous movement of water from seas, rivers and lakes into the air, forming clouds and falling back to Earth.", acc:["water cycle","the water cycle","watercycle"], hint:"w _ _ _ _   c _ _ _ _", ex:"Evaporation → condensation → precipitation → collection."},
+    {t:"mcq", fig:"pqr", q:"The table shows the properties of three substances P, Q and R. Which answer is correct?", o:["P is stone, Q is oxygen, R is water","P is oxygen, Q is stone, R is water","P is water, Q is oxygen, R is stone"], a:0, ex:"P has a definite shape and volume (solid). Q can be compressed (gas). R has a definite volume only (liquid)."},
+    {t:"match", q:"Write the name of each process.",
+      pairs:[["Liquid water turns into ice","Freezing"],["Ice turns into liquid water","Melting"],["Water is heated to a high temperature and quickly turns into steam","Boiling"],["Water vapour cools and turns into liquid water","Condensation"]],
+      ex:"Melting and freezing are opposites. So are boiling/evaporation and condensation."},
+    {t:"mcq", q:"Tom left a cold drink at room temperature. Water droplets formed on the <b>outside</b> of the cup. Which process caused this?", o:["Condensation","Evaporation","Melting","Dissolving"], a:0, ex:"Water vapour in the air touched the cold cup and condensed."},
+    {t:"mcq", q:"What happened to the water vapour particles to make the droplets form on Tom's cup?", o:["They were cooled, slowed down and moved closer together","They were heated and moved further apart","They dissolved in the drink","They came through the cup from the drink"], a:0, ex:"Cooling takes energy away. The particles slow down, move closer and become a liquid."},
+    {t:"mcq", fig:"bp", keep:true, nokey:true, grid:true, q:"Ravi found this information. Which liquid has the <b>highest boiling point</b>?", o:["A","B","C","D","E"], a:3, ex:"Liquid D boils at 210 °C, the highest number in the table."},
+    {t:"mcq", fig:"bp", keep:true, nokey:true, grid:true, q:"Which liquid is <b>pure water</b>?", o:["A","B","C","D","E"], a:1, ex:"Pure water melts at 0 °C and boils at 100 °C."},
+    {t:"mcq", fig:"bp", keep:true, q:"What is the <b>melting point</b> of liquid E?", o:["10 °C","0 °C","100 °C","47 °C"], a:0, ex:"Read across the row for E, under 'Melting point'."},
+    {t:"match", fig:"cycle", q:"Name each process in the water cycle.",
+      pairs:[["1","Evaporation"],["2","Condensation"],["3","Precipitation"],["4","Collection"]],
+      ex:"The sun heats the sea (evaporation), vapour cools to make clouds (condensation), rain falls (precipitation), water flows back to the sea (collection)."},
+    {t:"mcq", q:"What happens to the water vapour during <b>condensation</b>?", o:["It is cooled","It is boiled","It is heated","It is melted"], a:0, ex:"Cooling turns water vapour back into tiny drops of liquid water, which make clouds."},
+    {t:"mcq", q:"Sofia dissolved a teaspoon of salt in water. Which method can she use to get the salt back?", o:["Evaporation","Filtering","Freezing","Using a magnet"], a:0, ex:"Heat the salty water so the water evaporates. The salt is left behind."},
+    {t:"sort", fig:"sofia", q:"Use Sofia's results. Is each substance soluble or insoluble?", bins:["Soluble","Insoluble"],
+      items:[["Sand",1],["Sulfur powder",1],["Copper sulfate",0],["Crushed chalk",1],["Sugar",0],["Salt",0]],
+      ex:"Substances that seem to disappear are soluble. Those that sink, float or stay in bits are insoluble."},
+    {t:"sort", q:"Does each action help prevent water pollution or cause it?", bins:["Helps","Harms"],
+      items:[["Treating sewage before it goes into rivers",0],["Using less fertiliser and pesticide",0],["Picking up litter near lakes",0],["Throwing rubbish into rivers",1],["Pouring used oil down the drain",1],["Factories dumping chemicals into the sea",1]],
+      ex:"Any two of the 'Helps' ideas would answer the worksheet question."},
+    {t:"tf", q:"True or false? Melting chocolate is a reversible change.", a:true, ex:"Cool it and it becomes solid again."},
+    {t:"tf", q:"True or false? A gas has a definite shape.", a:false, ex:"A gas spreads out to fill its container. It has no fixed shape or volume."}
+  ]
+},
+{
+  id:"u4", code:"Unit 4.1", color:"--gut",
+  title:"The digestive system",
+  blurb:"Organs of digestion, what each one does and the order food travels.",
+  icon:'<svg class="mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M9 2v5c0 3 6 2 6 6s-6 3-6 6 3 3 3 3"/></svg>',
+  ideas:[
+    {h:"What digestion is for", li:[
+      "The digestive system <b>breaks down food</b> into tiny pieces (nutrients) that the body can absorb and use for energy and growth.",
+      "The lungs, heart and brain are <b>not</b> part of the digestive system."]},
+    {h:"The path food takes", flow:["Mouth","Oesophagus","Stomach","Small intestine","Large intestine","Anus"]},
+    {h:"What each organ does", li:[
+      "<b>Mouth</b>: teeth chew and break food into smaller pieces. <b>Saliva</b> softens food. The tongue moves food.",
+      "<b>Oesophagus</b>: a tube that pushes food from the mouth to the stomach.",
+      "<b>Stomach</b>: mixes, breaks down and stores food using acid and enzymes.",
+      "<b>Small intestine</b>: absorbs most of the nutrients from digested food into the blood.",
+      "<b>Large intestine</b>: absorbs water (and some minerals) from undigested food.",
+      "<b>Anus</b>: the last part, where waste (faeces) leaves the body."]},
+    {h:"Animals digest food too", li:[
+      "A rabbit has the same main organs: mouth and teeth, oesophagus, stomach, small and large intestine, and anus."]}
+  ],
+  words:[
+    ["Digestion","Breaking food down so the body can use it."],
+    ["Saliva","Liquid in the mouth that softens food."],
+    ["Oesophagus","Tube that pushes food from mouth to stomach."],
+    ["Stomach","Mixes, breaks down and stores food with acid and enzymes."],
+    ["Small intestine","Absorbs most nutrients from food."],
+    ["Large intestine","Absorbs water from undigested food."],
+    ["Anus","Where waste leaves the body."],
+    ["Nutrients","Useful parts of food the body needs."],
+    ["Enzymes","Chemicals that help break food down."]
+  ],
+  qs:[
+    {t:"match", fig:"gut", q:"Label the digestive system. Choose the name for each number.",
+      pairs:[["1","Mouth"],["2","Oesophagus"],["3","Stomach"],["4","Small intestine"],["5","Large intestine"],["6","Anus"]],
+      ex:"Follow the food from top to bottom."},
+    {t:"fill", q:"What is the liquid in the mouth that helps soften food?", acc:["saliva","spit"], hint:"s _ _ _ _ _", ex:"Saliva makes food soft and wet so it is easy to swallow."},
+    {t:"mcq", q:"Which organ absorbs <b>most nutrients</b> from digested food?", o:["Small intestine","Large intestine","Stomach","Oesophagus"], a:0, ex:"Nutrients pass from the small intestine into the blood."},
+    {t:"mcq", q:"Which organ <b>mixes, breaks down and stores</b> food?", o:["Stomach","Mouth","Small intestine","Anus"], a:0, ex:"The stomach uses acid and enzymes and churns the food."},
+    {t:"mcq", q:"Which is the last part of the digestive system, where waste leaves the body?", o:["Anus","Large intestine","Stomach","Small intestine"], a:0, ex:"Waste (faeces) leaves through the anus."},
+    {t:"order", q:"Put the organs in order from the start to the end of digestion.",
+      items:["Mouth","Oesophagus","Stomach","Small intestine","Large intestine","Anus"],
+      ex:"Small intestine comes before large intestine, even though it is longer."},
+    {t:"mcq", q:"What is the main job of the digestive system?", o:["To break down food so our body can use it","To help us breathe","To pump blood","To help us move"], a:0, ex:"Breathing is the lungs; pumping blood is the heart."},
+    {t:"mcq", q:"Which part of the body pushes food from the mouth to the stomach?", o:["Oesophagus","Teeth","Tongue","Large intestine"], a:0, ex:"Muscles in the oesophagus squeeze food down."},
+    {t:"mcq", q:"Which of these is <b>NOT</b> part of the digestive system?", o:["Lungs","Intestine","Stomach","Oesophagus"], a:0, ex:"The lungs belong to the breathing (respiratory) system."},
+    {t:"mcq", q:"What does the large intestine do?", o:["Absorbs water from undigested food","Breaks food into smaller pieces","Pushes food into the stomach","Makes saliva"], a:0, ex:"It takes water back into the body, leaving solid waste."},
+    {t:"tf", q:"Rabbit: True or false? The rabbit's teeth help it chew and break food into smaller pieces.", a:true, ex:"Teeth start digestion by breaking food up."},
+    {t:"tf", q:"Rabbit: True or false? The stomach breaks down food using acid and enzymes.", a:true, ex:"This is the stomach's job."},
+    {t:"tf", q:"Rabbit: True or false? The small intestine absorbs water and minerals from undigested food.", a:false, ex:"That is the large intestine. The small intestine absorbs nutrients."},
+    {t:"tf", q:"Rabbit: True or false? The large intestine is the last part of the digestive system.", a:false, ex:"The anus is the last part."},
+    {t:"mcq", q:"What is the function of the anus in a rabbit's digestive system?", o:["Waste (droppings) leaves the body","It absorbs nutrients","It chews food","It stores food"], a:0, ex:"Rabbits get rid of waste as droppings through the anus."}
+  ]
+}
+].map(u=>({...u, qs:u.qs.filter(q=>!q.hidden)}));
+
+/* ------------------------------------------------------------------ */
+/*  FIGURES                                                            */
+/* ------------------------------------------------------------------ */
+function lab(n,x,y,tx,ty){ // leader line from part (x,y) to number circle (tx,ty)
+  return `<line class="s-line" x1="${x}" y1="${y}" x2="${tx}" y2="${ty}"/><circle class="s-lab" cx="${tx}" cy="${ty}" r="12"/><text class="s-num" x="${tx}" y="${ty}">${n}</text>`;
+}
+function sine(x0,y0,w,amp,cycles){
+  let d=`M${x0},${y0}`; const steps=240;
+  for(let i=1;i<=steps;i++){const x=x0+w*i/steps; const y=y0-amp*Math.sin(2*Math.PI*cycles*i/steps); d+=` L${x.toFixed(1)},${y.toFixed(1)}`;}
+  return d;
+}
+const FIG = {
+  flower:()=>`<svg viewBox="0 0 360 310" width="360" role="img" aria-label="Flower with 7 numbered parts">
+    <path class="s-stemline" d="M180,205 L180,305"/>
+    <path class="s-stem" d="M162,203 Q132,214 112,240 Q146,232 174,208 Z"/>
+    <path class="s-stem" d="M198,203 Q228,214 248,240 Q214,232 186,208 Z"/>
+    <path class="s-petal" d="M168,196 Q92,176 82,98 Q140,108 174,184 Z"/>
+    <path class="s-petal" d="M192,196 Q268,176 278,98 Q220,108 186,184 Z"/>
+    <ellipse class="s-stem" cx="180" cy="203" rx="24" ry="9"/>
+    <path class="s-fil" d="M166,196 L142,112"/><path class="s-fil" d="M194,196 L218,112"/>
+    <ellipse class="s-anther" cx="141" cy="106" rx="11" ry="7" transform="rotate(-20 141 106)"/>
+    <ellipse class="s-anther" cx="219" cy="106" rx="11" ry="7" transform="rotate(20 219 106)"/>
+    <rect class="s-ovary" x="176" y="100" width="8" height="70" rx="3"/>
+    <ellipse class="s-ovary" cx="180" cy="180" rx="17" ry="19"/>
+    <circle class="s-ovule" cx="174" cy="178" r="4"/><circle class="s-ovule" cx="186" cy="178" r="4"/><circle class="s-ovule" cx="180" cy="188" r="4"/>
+    <ellipse class="s-anther" cx="180" cy="95" rx="14" ry="7"/>
+    ${lab(1,104,140,30,160)}${lab(2,128,226,30,250)}${lab(3,227,101,330,60)}${lab(4,208,150,330,150)}
+    ${lab(5,170,93,30,50)}${lab(6,184,130,330,105)}${lab(7,196,186,330,205)}
+  </svg>`,
+  gut:()=>`<svg viewBox="0 0 320 350" width="320" role="img" aria-label="Human digestive system with 6 numbered parts">
+    <path class="s-body" d="M160,6 C190,6 205,26 202,50 C200,62 192,70 186,74 L188,92 C230,98 252,116 254,150 L254,320 C254,336 240,344 224,344 L96,344 C80,344 66,336 66,320 L66,150 C68,116 90,98 132,92 L134,74 C128,70 120,62 118,50 C115,26 130,6 160,6 Z"/>
+    <path class="s-tube" stroke-width="7" d="M160,52 L160,100 Q160,118 168,124"/>
+    <path class="s-stom" d="M162,120 C178,104 222,108 226,132 C230,160 208,182 184,176 C170,172 168,160 176,150 C182,142 170,132 162,120 Z"/>
+    <path class="s-li" stroke-width="13" d="M104,300 L104,196 Q104,186 114,186 L210,186 Q220,186 220,196 L220,292 Q220,306 200,306 L170,306 L166,328"/>
+    <path class="s-tube" stroke-width="7" d="M190,176 Q196,196 172,200 Q126,204 128,214 Q130,224 168,222 Q200,220 200,232 Q200,244 166,244 Q128,244 128,256 Q128,268 166,268 Q196,268 196,280 Q196,290 170,290 Q130,290 108,298"/>
+    <ellipse class="s-stom" cx="160" cy="44" rx="13" ry="6"/>
+    <circle class="s-stom" cx="166" cy="332" r="5"/>
+    ${lab(1,150,44,30,40)}${lab(2,160,80,30,90)}${lab(3,212,140,292,120)}${lab(4,140,256,30,256)}${lab(5,220,240,292,230)}${lab(6,171,332,292,322)}
+  </svg>`,
+  waves:()=>`<svg viewBox="0 0 560 170" width="560" role="img" aria-label="Two sound waves. A has tall, wide waves. B has short, close-together waves.">
+    <line class="s-axis" x1="20" y1="85" x2="270" y2="85"/><line class="s-axis" x1="290" y1="85" x2="540" y2="85"/>
+    <path class="s-wave" d="${sine(20,85,250,55,2)}"/>
+    <path class="s-wave" d="${sine(290,85,250,22,7)}"/>
+    <text class="s-txt" x="145" y="164" text-anchor="middle" style="font-weight:600">Sound A</text>
+    <text class="s-txt" x="415" y="164" text-anchor="middle" style="font-weight:600">Sound B</text>
+  </svg>`,
+  cycle:()=>`<svg viewBox="0 0 380 250" width="380" role="img" aria-label="Water cycle with 4 numbered processes">
+    <defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="s-head" d="M0,0 L10,5 L0,10 Z"/></marker></defs>
+    <rect class="s-sky" x="0" y="0" width="380" height="250" rx="8"/>
+    <circle class="s-sun" cx="46" cy="44" r="24"/>
+    <path class="s-land" d="M200,250 L300,110 L340,160 L380,120 L380,250 Z"/>
+    <path class="s-sea" d="M0,200 Q40,192 80,200 T160,200 T240,200 L260,250 L0,250 Z"/>
+    <g class="s-cloud"><ellipse cx="250" cy="52" rx="44" ry="20"/><ellipse cx="220" cy="58" rx="26" ry="16"/><ellipse cx="282" cy="60" rx="26" ry="15"/></g>
+    <path class="s-arrow" marker-end="url(#ah)" d="M90,188 C80,160 100,140 92,110"/>
+    <path class="s-arrow" marker-end="url(#ah)" d="M118,188 C108,160 128,140 120,110"/>
+    <path class="s-arrow" marker-end="url(#ah)" d="M130,92 Q170,58 196,56"/>
+    <g><line class="s-rain" x1="240" y1="86" x2="232" y2="110"/><line class="s-rain" x1="258" y1="86" x2="250" y2="110"/><line class="s-rain" x1="276" y1="86" x2="268" y2="110"/><line class="s-rain" x1="249" y1="118" x2="241" y2="142"/><line class="s-rain" x1="267" y1="118" x2="259" y2="142"/></g>
+    <path class="s-arrow" marker-end="url(#ah)" d="M300,170 Q270,205 222,212"/>
+    ${lab(1,104,150,50,150)}${lab(2,250,34,330,24)}${lab(3,276,128,330,90)}${lab(4,272,196,330,214)}
+  </svg>`,
+  dbtable:()=>`<table><thead><tr><th class="l">Material</th><th>Volume (dB)</th></tr></thead><tbody>
+    <tr><td class="l">Bubble wrap</td><td>40</td></tr><tr><td class="l">Carton box</td><td>45</td></tr><tr><td class="l">Wooden panel</td><td>50</td></tr><tr><td class="l">Fabric</td><td>55</td></tr></tbody></table>`,
+  dbbars:()=>{
+    const d=[["Bubble wrap",40],["Carton box",45],["Wooden panel",50],["Fabric",55]];
+    const x0=56,y0=200,h=170,max=60,bw=58,gap=34;
+    let g='';
+    for(let v=0;v<=60;v+=10){const y=y0-h*v/max; g+=`<line class="s-grid" x1="${x0}" y1="${y}" x2="${x0+4*(bw+gap)}" y2="${y}"/><text class="s-muted" x="${x0-8}" y="${y+4}" text-anchor="end">${v}</text>`;}
+    d.forEach(([n,v],i)=>{const x=x0+gap/2+i*(bw+gap), bh=h*v/max; g+=`<rect class="s-bar" x="${x}" y="${y0-bh}" width="${bw}" height="${bh}" rx="3"/><text class="s-txt" x="${x+bw/2}" y="${y0-bh-6}" text-anchor="middle" style="font-weight:600">${v}</text><text class="s-muted" x="${x+bw/2}" y="${y0+16}" text-anchor="middle">${n}</text>`;});
+    return `<svg viewBox="0 0 440 250" width="440" role="img" aria-label="Bar chart of sound volume through each material">${g}
+      <line class="s-line" x1="${x0}" y1="${y0}" x2="${x0+4*(bw+gap)}" y2="${y0}"/><line class="s-line" x1="${x0}" y1="${y0}" x2="${x0}" y2="20"/>
+      <text class="s-txt" x="16" y="${y0-h/2}" transform="rotate(-90 16 ${y0-h/2})" text-anchor="middle">Volume (dB)</text>
+      <text class="s-txt" x="${x0+2*(bw+gap)}" y="244" text-anchor="middle">Material</text></svg>`;
+  },
+  pqr:()=>`<table><thead><tr><th class="l">Property</th><th>P</th><th>Q</th><th>R</th></tr></thead><tbody>
+    <tr><td class="l">Has a definite shape</td><td>✓</td><td></td><td></td></tr>
+    <tr><td class="l">Has a definite volume</td><td>✓</td><td></td><td>✓</td></tr>
+    <tr><td class="l">Can be compressed easily</td><td></td><td>✓</td><td></td></tr></tbody></table>`,
+  bp:()=>`<table><thead><tr><th>Liquid</th><th>Melting point</th><th>Boiling point</th></tr></thead><tbody>
+    <tr><td>A</td><td>−10 °C</td><td>85 °C</td></tr><tr><td>B</td><td>0 °C</td><td>100 °C</td></tr>
+    <tr><td>C</td><td>−40 °C</td><td>120 °C</td></tr><tr><td>D</td><td>5 °C</td><td>210 °C</td></tr>
+    <tr><td>E</td><td>10 °C</td><td>160 °C</td></tr></tbody></table>`,
+  sofia:()=>`<table><thead><tr><th class="l">Substance</th><th>Sinks to the bottom</th><th>Floats on top</th><th>Floats in the liquid</th><th>Seems to disappear</th></tr></thead><tbody>
+    <tr><td class="l">Sand</td><td>✓</td><td></td><td></td><td></td></tr>
+    <tr><td class="l">Sulfur powder</td><td></td><td>✓</td><td></td><td></td></tr>
+    <tr><td class="l">Copper sulfate</td><td></td><td></td><td></td><td>✓</td></tr>
+    <tr><td class="l">Crushed chalk</td><td>✓</td><td></td><td>✓</td><td></td></tr>
+    <tr><td class="l">Sugar</td><td></td><td></td><td></td><td>✓</td></tr>
+    <tr><td class="l">Salt</td><td></td><td></td><td></td><td>✓</td></tr></tbody></table>`,
+  germ:()=>`<table><thead><tr><th>Dish</th><th class="l">Where</th><th>Temperature</th><th>Seeds germinated after 5 days</th></tr></thead><tbody>
+    <tr><td>A</td><td class="l">Fridge</td><td>4 °C</td><td>0 / 10</td></tr>
+    <tr><td>B</td><td class="l">Classroom</td><td>22 °C</td><td>8 / 10</td></tr>
+    <tr><td>C</td><td class="l">Warm cupboard</td><td>30 °C</td><td>10 / 10</td></tr></tbody></table>`
+};
+
+/* ------------------------------------------------------------------ */
+/*  HELPERS                                                            */
+/* ------------------------------------------------------------------ */
+const $=(s,el=document)=>el.querySelector(s);
+const $$=(s,el=document)=>[...el.querySelectorAll(s)];
+const app=$("#app");
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const strip=s=>String(s).replace(/<[^>]+>/g,"");
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+const store={get(k,d){try{const v=localStorage.getItem("g4sci:"+k);return v==null?d:JSON.parse(v);}catch(e){return d;}},set(k,v){try{localStorage.setItem("g4sci:"+k,JSON.stringify(v));}catch(e){}}};
+const norm=s=>String(s).toLowerCase().replace(/[.,!?'"()]/g,"").replace(/\s+/g," ").trim().replace(/^(the|a|an) /,"");
+const unitById=id=>UNITS.find(u=>u.id===id);
+const KIND={mcq:"Choose the answer",tf:"True or false",fill:"Write the answer",order:"Put in order",match:"Match",sort:"Sort"};
+function maxOf(q){return q.t==="match"?q.pairs.length:q.t==="sort"?q.items.length:q.t==="order"?2:1;}
+function answerText(q){
+  if(q.t==="mcq") return esc(q.o[q.a]);
+  if(q.t==="tf") return q.a?"True":"False";
+  if(q.t==="fill") return esc(q.acc[0]);
+  if(q.t==="order") return q.items.map(esc).join(" → ");
+  if(q.t==="match") return q.pairs.map(p=>`${esc(p[0])} → <b>${esc(p[1])}</b>`).join("; ");
+  if(q.t==="sort") return q.bins.map((b,bi)=>`<b>${esc(b)}:</b> ${q.items.filter(i=>i[1]===bi).map(i=>esc(i[0])).join(", ")}`).join("<br>");
+  return "";
+}
+function setUnitColor(el,u){el.style.setProperty("--u",u?`var(${u.color})`:"var(--primary)");}
+window.scrollTop=()=>{try{window.scrollTo({top:0,behavior:"instant"})}catch(e){window.scrollTo(0,0)}};
+
+/* ------------------------------------------------------------------ */
+/*  HOME                                                               */
+/* ------------------------------------------------------------------ */
+function home(){
+  setUnitColor(app,null);
+  const name=store.get("name","");
+  app.innerHTML=`
+  <header class="top">
+    <div>
+      <div class="eyebrow">Trường Tiểu học Nguyễn Siêu · Cambridge Primary Science</div>
+      <h1>Grade 4 <span>Science Practice</span></h1>
+    </div>
+    <div class="namebox"><label for="sname">Your name</label><input id="sname" placeholder="e.g. Minh Anh, 4C" value="${esc(name)}" maxlength="40"></div>
+  </header>
+  <div class="howto"><b>How to use:</b> pick a unit. Tap <b>Learn</b> to read the key ideas and key words, then <b>Practice</b> to answer questions one by one. You see the right answer and a short explanation after each question. <i>Chọn bài, đọc phần Learn rồi làm Practice — mỗi câu đều có đáp án và giải thích.</i></div>
+  <section class="units">${UNITS.map(u=>{
+    const best=store.get("best:"+u.id,null);
+    return `<article class="ucard" style="--u:var(${u.color})">${u.icon}
+      <span class="tag"><i></i>${u.code}</span>
+      <h2>${u.title}</h2><p>${u.blurb}</p>
+      <div class="meta"><span><b>${u.qs.length}</b> questions</span><span>Best: <b>${best==null?"–":best+"%"}</b></span></div>
+      <div class="row"><button class="btn" data-learn="${u.id}">Learn</button><button class="btn primary" data-prac="${u.id}">Practice</button></div>
+    </article>`;}).join("")}
+  </section>
+  <section class="mixed">
+    <div><h2>Mixed revision test</h2><p>20 questions from all four units, in random order. Good practice for the first term test. Best: <b>${(b=>b==null?"–":b+"%")(store.get("best:mix",null))}</b></p></div>
+    <button class="btn" id="mix">Start test</button>
+  </section>
+  <footer>Questions follow the Grade 4 worksheets for Weeks 9–11: Units 1, 2, 3 and 4.1.</footer>`;
+  $("#sname").oninput=e=>store.set("name",e.target.value.trim());
+  $$("[data-learn]").forEach(b=>b.onclick=()=>learn(b.dataset.learn));
+  $$("[data-prac]").forEach(b=>b.onclick=()=>{const u=unitById(b.dataset.prac);startQuiz(u.id,u.code+" · "+u.title,shuffle(u.qs.map(q=>({...q,unit:u.id}))));});
+  $("#mix").onclick=()=>{
+    const qs=shuffle(UNITS.flatMap(u=>shuffle(u.qs).slice(0,5).map(q=>({...q,unit:u.id}))));
+    startQuiz("mix","Mixed revision test",qs);
+  };
+  scrollTop();
+}
+
+/* ------------------------------------------------------------------ */
+/*  LEARN                                                              */
+/* ------------------------------------------------------------------ */
+function learn(id){
+  const u=unitById(id); setUnitColor(app,u);
+  app.innerHTML=`
+  <div class="bar"><button class="back" id="back">← All units</button></div>
+  <div class="bar"><div class="title"><small>${u.code} · Key ideas</small><b>${u.title}</b></div><button class="btn primary" id="go">Practice ${u.qs.length} questions</button></div>
+  <section class="ideas">${u.ideas.map(s=>`<div class="idea"><h3>${s.h}</h3>${s.li?`<ul>${s.li.map(l=>`<li>${l}</li>`).join("")}</ul>`:""}${s.flow?`<div class="flow">${s.flow.map(f=>`<span>${f}</span>`).join("<em>→</em>")}</div>`:""}</div>`).join("")}</section>
+  <div class="sechead"><h2>Key words</h2><button class="btn ghost" id="all">Show all meanings</button></div>
+  <section class="cards">${shuffle(u.words).map(([t,d],i)=>`<button class="fcard" id="fc${i}" aria-expanded="false"><span class="term">${t}</span><span class="def">${d}</span></button>`).join("")}</section>
+  <div class="actions"><button class="btn primary" id="go2">Start practice</button></div>`;
+  $("#back").onclick=home;
+  $("#go").onclick=$("#go2").onclick=()=>startQuiz(u.id,u.code+" · "+u.title,shuffle(u.qs.map(q=>({...q,unit:u.id}))));
+  $$(".fcard").forEach(c=>c.onclick=()=>c.setAttribute("aria-expanded",c.getAttribute("aria-expanded")==="true"?"false":"true"));
+  $("#all").onclick=e=>{const open=e.target.textContent.startsWith("Show");$$(".fcard").forEach(c=>c.setAttribute("aria-expanded",open?"true":"false"));e.target.textContent=open?"Hide meanings":"Show all meanings";};
+  scrollTop();
+}
+
+/* ------------------------------------------------------------------ */
+/*  QUIZ                                                               */
+/* ------------------------------------------------------------------ */
+let S=null;
+function startQuiz(key,title,qs){
+  S={key,title,qs,i:0,got:0,total:0,results:[],answered:false,cur:{}};
+  renderQ();
+}
+function renderQ(){
+  const q=S.qs[S.i], u=unitById(q.unit);
+  setUnitColor(app,S.key==="mix"?null:u);
+  S.answered=false; S.cur={};
+  const pct=Math.round(100*S.i/S.qs.length);
+  app.innerHTML=`
+  <div class="bar"><button class="back" id="back">← Stop</button><div class="title"><small>${esc(S.title)}</small><b>Question ${S.i+1} of ${S.qs.length}</b></div><span class="score">Score ${S.got} / ${S.total}</span></div>
+  <div class="prog" aria-hidden="true"><i style="width:${pct}%"></i></div>
+  <article class="qcard pop" style="--u:var(${u.color})">
+    <div class="qhead"><span class="kind">${KIND[q.t]}</span><span>${u.code} · ${u.title}</span></div>
+    <h2 class="qtext">${q.q}</h2>
+    ${q.fig?`<div class="fig">${FIG[q.fig]()}</div>`:""}
+    ${q.bank?`<div class="bank" aria-label="Word bank">${q.bank.map(w=>`<span>${w}</span>`).join("")}</div>`:""}
+    <div id="ans"></div>
+    <div id="fb" hidden></div>
+    <div class="actions"><button class="btn primary" id="check" disabled>Check answer</button><button class="btn primary" id="next" hidden>${S.i+1<S.qs.length?"Next question →":"See my results"}</button></div>
+  </article>`;
+  $("#back").onclick=()=>{ if(S.total>0) results(); else home(); };
+  $("#check").onclick=doCheck;
+  $("#next").onclick=()=>{S.i++; if(S.i<S.qs.length) renderQ(); else results();};
+  R[q.t](q,$("#ans"));
+  scrollTop();
+}
+const enableCheck=on=>{const b=$("#check"); if(b) b.disabled=!on;};
+
+function doCheck(){
+  if(S.answered) return;
+  const q=S.qs[S.i]; const r=S.cur.check(); S.answered=true;
+  S.got+=r.got; S.total+=r.max; S.results.push({q,got:r.got,max:r.max});
+  const fb=$("#fb"); fb.hidden=false;
+  const cls=r.got===r.max?"good":r.got>0?"part":"miss";
+  const head=r.got===r.max?(r.max>1?`Correct! +${r.got} marks`:"Correct!"):r.got>0?`Nearly! ${r.got} of ${r.max} marks`:"Not quite.";
+  const showAns = r.got<r.max && !["mcq","tf"].includes(q.t) || (r.got<r.max && ["mcq","tf"].includes(q.t));
+  fb.className="fb pop "+cls;
+  fb.innerHTML=`<strong>${head}</strong>${showAns?`<div class="ans">Answer: ${answerText(q)}</div>`:""}${q.ex?`<div>${q.ex}</div>`:""}`;
+  $("#check").hidden=true; const n=$("#next"); n.hidden=false; n.focus();
+  $(".score").textContent=`Score ${S.got} / ${S.total}`;
+}
+
+const R={
+  mcq(q,box){
+    let opts=q.o.map((t,i)=>({t,i})); if(!q.keep) opts=shuffle(opts);
+    const two=q.grid||opts.length===2;
+    box.innerHTML=`<div class="opts ${two?"two":""}" role="group">${opts.map((o,k)=>`<button class="opt" data-i="${o.i}">${q.nokey?"":`<span class="key">${"ABCDEF"[k]}</span>`}<span>${esc(o.t)}</span></button>`).join("")}</div>`;
+    let sel=null;
+    $$(".opt",box).forEach(b=>b.onclick=()=>{if(S.answered)return;$$(".opt",box).forEach(x=>x.classList.remove("sel"));b.classList.add("sel");sel=+b.dataset.i;enableCheck(true);});
+    S.cur.check=()=>{$$(".opt",box).forEach(b=>{const i=+b.dataset.i;if(i===q.a)b.classList.add("right");else if(i===sel)b.classList.add("wrong");b.disabled=true;});return{got:sel===q.a?1:0,max:1};};
+  },
+  tf(q,box){ R.mcq({...q,o:["True","False"],a:q.a?0:1,keep:true,nokey:true},box); },
+  fill(q,box){
+    box.innerHTML=`<div class="fillrow"><label class="hint" for="fillin" style="display:block;margin-bottom:6px">Type your answer${q.hint?` · hint: <span style="letter-spacing:.06em">${esc(q.hint)}</span>`:""}</label><input id="fillin" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type here"></div>`;
+    const inp=$("#fillin",box);
+    inp.oninput=()=>enableCheck(inp.value.trim().length>0);
+    inp.onkeydown=e=>{if(e.key==="Enter"&&inp.value.trim()&&!S.answered){e.preventDefault();doCheck();}};
+    S.cur.check=()=>{const v=norm(inp.value);const ok=q.acc.some(a=>norm(a)===v);inp.disabled=true;inp.classList.add(ok?"right":"wrong");return{got:ok?1:0,max:1};};
+  },
+  order(q,box){
+    let pool=q.items.map((t,i)=>({t,i})); do{pool=shuffle(pool);}while(pool.every((p,k)=>p.i===k));
+    const picked=[];
+    const draw=()=>{
+      box.innerHTML=`<p class="hint">Tap the cards below in the right order. Tap a filled box to take it back.</p>
+      <ol class="seq">${q.items.map((_,k)=>{const p=picked[k];return `<li class="slot ${p?"filled":""}" data-k="${k}" tabindex="${p?0:-1}"><span class="n">${k+1}</span><span>${p?esc(p.t):""}</span></li>`;}).join("")}</ol>
+      <div class="chips">${pool.filter(p=>!picked.includes(p)).map(p=>`<button class="chip" data-i="${p.i}">${esc(p.t)}</button>`).join("")}</div>`;
+      $$(".chip",box).forEach(c=>c.onclick=()=>{if(S.answered)return;picked.push(pool.find(p=>p.i===+c.dataset.i));draw();});
+      $$(".slot.filled",box).forEach(s=>{const f=()=>{if(S.answered)return;picked.splice(+s.dataset.k,1);draw();};s.onclick=f;s.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();f();}};});
+      enableCheck(picked.length===q.items.length);
+    };
+    draw();
+    S.cur.check=()=>{let c=0;$$(".slot",box).forEach((s,k)=>{const ok=picked[k].i===k;if(ok)c++;s.classList.add(ok?"right":"wrong");});
+      const n=q.items.length;return{got:c===n?2:c>=n/2?1:0,max:2};};
+  },
+  match(q,box){
+    const rights=shuffle([...new Set(q.pairs.map(p=>p[1]))]);
+    box.innerHTML=`<div class="match">${q.pairs.map((p,k)=>`<div class="mrow"><label class="ml" for="m${k}">${esc(p[0])}</label><select id="m${k}"><option value="">Choose…</option>${rights.map(r=>`<option>${esc(r)}</option>`).join("")}</select></div>`).join("")}</div>`;
+    const sels=$$("select",box);
+    sels.forEach(s=>s.onchange=()=>enableCheck(sels.every(x=>x.value)));
+    S.cur.check=()=>{let c=0;sels.forEach((s,k)=>{const ok=s.value===q.pairs[k][1];if(ok)c++;s.disabled=true;s.closest(".mrow").classList.add(ok?"right":"wrong");});return{got:c,max:q.pairs.length};};
+  },
+  sort(q,box){
+    const items=shuffle(q.items.map((it,i)=>({t:it[0],b:it[1],i})));const ans={};
+    box.innerHTML=`<p class="hint">Choose a group for every item.</p><div class="sort">${items.map(it=>`<div class="srow" data-i="${it.i}"><span class="st">${esc(it.t)}</span><span class="seg" role="group">${q.bins.map((b,bi)=>`<button data-b="${bi}" aria-pressed="false">${esc(b)}</button>`).join("")}</span></div>`).join("")}</div>`;
+    $$(".srow",box).forEach(row=>$$("button",row).forEach(b=>b.onclick=()=>{if(S.answered)return;ans[row.dataset.i]=+b.dataset.b;$$("button",row).forEach(x=>{x.classList.toggle("on",x===b);x.setAttribute("aria-pressed",x===b);});enableCheck(Object.keys(ans).length===items.length);}));
+    S.cur.check=()=>{let c=0;$$(".srow",box).forEach(row=>{const it=q.items[+row.dataset.i];const ok=ans[row.dataset.i]===it[1];if(ok)c++;row.classList.add(ok?"right":"wrong");$$("button",row).forEach(x=>x.disabled=true);});return{got:c,max:q.items.length};};
+  }
+};
+
+/* ------------------------------------------------------------------ */
+/*  RESULTS                                                            */
+/* ------------------------------------------------------------------ */
+function results(){
+  const pct=S.total?Math.round(100*S.got/S.total):0;
+  const u=S.key==="mix"?null:unitById(S.key); setUnitColor(app,u);
+  const finished=S.results.length===S.qs.length;
+  if(finished&&!S.retry){const prev=store.get("best:"+S.key,null);if(prev==null||pct>prev)store.set("best:"+S.key,pct);}
+  const stars=pct>=90?3:pct>=70?2:pct>=50?1:0;
+  const name=store.get("name","");
+  const msg=pct>=90?"Excellent work":pct>=70?"Great job":pct>=50?"Good effort":"Keep practising";
+  const missed=S.results.filter(r=>r.got<r.max);
+  const star=on=>`<svg viewBox="0 0 24 24"><path class="${on?"on":"off"}" d="M12 2l3 6.6 7.2.8-5.4 4.9 1.5 7.1L12 17.8 5.7 21.4l1.5-7.1L1.8 9.4 9 8.6z"/></svg>`;
+  app.innerHTML=`
+  <div class="bar"><button class="back" id="back">← All units</button></div>
+  <section class="res pop">
+    <div class="eyebrow">${esc(S.title)}${finished?"":" · stopped early"}</div>
+    <div class="big">${pct}%<small> · ${S.got} / ${S.total} marks</small></div>
+    <div class="stars" aria-label="${stars} of 3 stars">${star(stars>=1)}${star(stars>=2)}${star(stars>=3)}</div>
+    <h2>${msg}${name?", "+esc(name):""}!</h2>
+    <p style="margin:0;color:var(--muted)">${missed.length?`You have ${missed.length} question${missed.length>1?"s":""} to look at again. Read the answers below, then practise just those.`:"You got every question right."}</p>
+    <div class="actions" style="justify-content:flex-start">
+      ${missed.length?`<button class="btn primary" id="redo">Practise my mistakes (${missed.length})</button>`:""}
+      <button class="btn" id="again">Try again</button>
+      ${u?`<button class="btn ghost" id="learn">Read key ideas</button>`:""}
+    </div>
+  </section>
+  ${missed.length?`<div class="sechead"><h2>Check these answers</h2></div><section class="review">${missed.map(r=>`<div class="rv ${r.got>0?"part":""}"><div>${strip(r.q.q)}</div><p><b>Answer:</b> ${answerText(r.q)}</p>${r.q.ex?`<p>${r.q.ex}</p>`:""}</div>`).join("")}</section>`:""}`;
+  $("#back").onclick=home;
+  const again=()=>{ if(S.key==="mix") $("#back").click(), setTimeout(()=>$("#mix")&&$("#mix").click(),0); else { const uu=unitById(S.key); startQuiz(uu.id,uu.code+" · "+uu.title,shuffle(uu.qs.map(q=>({...q,unit:uu.id})))); } };
+  $("#again").onclick=again;
+  if($("#redo")) $("#redo").onclick=()=>{const qs=shuffle(missed.map(r=>r.q));const k=S.key,t=S.title;startQuiz(k,t+" · mistakes",qs);S.retry=true;};
+  if($("#learn")) $("#learn").onclick=()=>learn(u.id);
+  scrollTop();
+}
+
+home();
+</script>
